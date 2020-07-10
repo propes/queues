@@ -59,14 +59,21 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
    private class RandomizedQueueIterator implements Iterator<Item> {
 
+      private final int[] indexes;
+      private int pos;
+
+      public RandomizedQueueIterator() {
+         indexes = StdRandom.permutation(size);
+      }
+
       public boolean hasNext() {
-         return !isEmpty();
+         return pos < indexes.length;
       }
 
       public Item next() {
          if (!hasNext()) throw new NoSuchElementException("queue is empty");
 
-         return items[0];
+         return items[indexes[pos++]];
       }
 
       public void remove() {
@@ -148,9 +155,11 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
       Assert.equal(1, item, "item should be correctly returned when item is sampled");
 
       iter = queue.iterator();
-      item = iter.next();
 
       Assert.isTrue(iter.hasNext(), "iterator should have next when item is added");
+
+      item = iter.next();
+
       Assert.equal(1, item, "iterator should return item when item is added");
 
       item = queue.dequeue();
@@ -186,6 +195,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
       queue.enqueue(2);
       queue.enqueue(3);
       first = queue.dequeue();
+      second = queue.dequeue();
       for (int n = 0; n < 100; n++) {
          queue.enqueue(2);
          queue.enqueue(3);
@@ -206,13 +216,13 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
       Assert.equal(6, queue.size(), "size should be correct when adding multiple items");
 
-      // int sum = 0;
-      // int expectedSum = 4 + 5 + 6 + 7 + 8 + 9;
-      // for (int it : queue) {
-      //    sum += it;
-      // }
-      //
-      // Assert.equal(expectedSum, sum, "iterator should return all items");
+      int sum = 0;
+      int expectedSum = 4 + 5 + 6 + 7 + 8 + 9;
+      for (int it : queue) {
+         sum += it;
+      }
+
+      Assert.equal(expectedSum, sum, "iterator should return all items");
 
       for (int n = 0; n < 6; n++) {
          queue.dequeue();
