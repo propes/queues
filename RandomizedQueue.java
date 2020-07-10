@@ -223,7 +223,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
       //
       // Assert.equal(expectedSum, sum, "iterator should return all items");
 
-      for (int n = 0; n < 7; n++) {
+      for (int n = 0; n < 6; n++) {
          queue.dequeue();
       }
 
