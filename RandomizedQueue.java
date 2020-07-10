@@ -6,9 +6,7 @@ import java.util.NoSuchElementException;
 
 public class RandomizedQueue<Item> implements Iterable<Item> {
 
-   private int size;
-   private int first;
-   private int last = -1;
+   private int size = 0;
    private Item[] items = (Item[]) new Object[1];
 
    public RandomizedQueue() {
@@ -25,23 +23,23 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
    public void enqueue(Item item) {
       if (item == null) throw new IllegalArgumentException("item cannot be null");
 
-      if (last == items.length - 1) {
+      if (size == items.length - 1) {
          doubleItems();
       }
 
-      items[++last] = item;
+      items[size] = item;
       size++;
    }
 
    public Item dequeue() {
       if (isEmpty()) throw new NoSuchElementException("queue is empty");
 
-      int i = StdRandom.uniform(first, last + 1);
+      int i = StdRandom.uniform(0, size);
 
-      Item item = items[i];
-      items[i] = items[first];
-      items[first++] = null;
       size--;
+      Item item = items[i];
+      items[i] = items[size];
+      items[size] = null;
 
       if (size < items.length / 4) halveItems();
 
@@ -51,7 +49,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
    public Item sample() {
       if (isEmpty()) throw new NoSuchElementException("queue is empty");
 
-      int i = first == last ? first : StdRandom.uniform(first, last + 1);
+      int i = StdRandom.uniform(0, size);
       return items[i];
    }
 
@@ -78,24 +76,18 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
    private void doubleItems() {
       Item[] newItems = (Item[]) new Object[2 * items.length];
-      int i = 0;
-      for (int j = first; j <= last; j++) {
-         newItems[i++] = items[j];
+      for (int i = 0; i < size; i++) {
+         newItems[i] = items[i];
       }
       items = newItems;
-      first = 0;
-      last = i - 1;
    }
 
    private void halveItems() {
       Item[] newItems = (Item[]) new Object[items.length / 2];
-      int i = 0;
-      for (int j = first; j <= last; j++) {
-         newItems[i++] = items[j];
+      for (int i = 0; i < size; i++) {
+         newItems[i] = items[i];
       }
       items = newItems;
-      first = 0;
-      last = i - 1;
    }
 
    public static void main(String[] args) {
@@ -194,7 +186,6 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
       queue.enqueue(2);
       queue.enqueue(3);
       first = queue.dequeue();
-      second = queue.dequeue();
       for (int n = 0; n < 100; n++) {
          queue.enqueue(2);
          queue.enqueue(3);
