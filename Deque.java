@@ -55,7 +55,13 @@ public class Deque<Item> implements Iterable<Item> {
 
       LinkedItem<Item> oldFirst = first;
       first = first.getNext();
-      if (--size == 0) last = null;
+      if (first != null) {
+         first.setPrev(null);
+      }
+      else {
+         last = null;
+      }
+      size--;
 
       return oldFirst.getValue();
    }
@@ -65,7 +71,13 @@ public class Deque<Item> implements Iterable<Item> {
 
       LinkedItem<Item> oldLast = last;
       last = last.getPrev();
-      if (--size == 0) first = null;
+      if (last != null) {
+         last.setNext(null);
+      }
+      else {
+         first = null;
+      }
+      size--;
 
       return oldLast.getValue();
    }
@@ -211,6 +223,40 @@ public class Deque<Item> implements Iterable<Item> {
 
       Assert.equal(0, dequeStr.size(),
                    "size should be zero after multiple items are removed from first");
+
+      deque = new Deque<Integer>();
+      deque.addLast(1);
+      deque.removeFirst();
+      deque.addFirst(3);
+      deque.addFirst(4);
+      deque.removeLast();
+      deque.removeFirst();
+      deque.addFirst(9);
+      int item = deque.removeLast();
+
+      Assert.equal(9, item, "remove should return correct item after random operations");
+
+      deque = new Deque<Integer>();
+      deque.addLast(1);
+      deque.addLast(2);
+      deque.addLast(3);
+      deque.removeFirst();
+      deque.removeFirst();
+      deque.addFirst(6);
+      deque.addLast(7);
+      deque.removeFirst();
+      deque.addFirst(9);
+      deque.addFirst(10);
+      deque.removeLast();
+
+      iter = deque.iterator();
+      int count = 0;
+      while (iter.hasNext()) {
+         iter.next();
+         count++;
+      }
+      Assert.equal(3, count, "iterator should have correct number of items after random operators");
+
 
       if (Assert.allTestsPassed())
          StdOut.println("All tested passed.");
