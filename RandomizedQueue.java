@@ -195,7 +195,7 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
       queue.enqueue(2);
       queue.enqueue(3);
       first = queue.dequeue();
-      second = queue.dequeue();
+      queue.dequeue();
       for (int n = 0; n < 100; n++) {
          queue.enqueue(2);
          queue.enqueue(3);
